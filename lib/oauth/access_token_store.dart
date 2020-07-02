@@ -48,10 +48,17 @@ class AccessTokenStore {
     if (!accessToken.shouldRefresh) {
       return accessToken;
     }
-
     var body = _authRequestGenerator.generateForRefreshToken(accessToken.refreshToken);
-    var refreshedAccessToken = await _accessTokenRetriever.retrieveAccessToken(body, uuid: accessToken.uuid);
-    await _accessTokenRepository.update(refreshedAccessToken);
-    return refreshedAccessToken;
+
+    //TODO - write unit test
+    try {
+      var refreshedAccessToken = await _accessTokenRetriever.retrieveAccessToken(body, uuid: accessToken.uuid);
+      await _accessTokenRepository.update(refreshedAccessToken);
+      return refreshedAccessToken;
+    }
+    catch (e) {
+      print(e);
+      return null;
+    }
   }
 }
